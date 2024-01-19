@@ -1,0 +1,42 @@
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(49, 23, 47);
+        }
+
+        #todoList {
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li.completed {
+            background-color: white;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            width: 70%;
+        }
+
+        button {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .todotext{
+            color:white;
+        }

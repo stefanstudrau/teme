@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 2 Inregistrare</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <form id="registrationForm" onsubmit="return validateForm()">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <span id="emailError" class="error"></span>
+        <br>
+
+        <label for="password">Parolă:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <span id="passwordError" class="error"></span>
+        <br>
+
+        <label for="confirmPassword">Confirmare Parolă:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        <br>
+        <span id="confirmPasswordError" class="error"></span>
+        <br>
+
+        <input class="contbuton" type="submit" value="Creeaza cont">
+    </form>
+
+    <script>
+        function validateForm() {
+            // Resetarea mesajelor de eroare
+            document.getElementById("emailError").innerHTML = "";
+            document.getElementById("passwordError").innerHTML = "";
+            document.getElementById("confirmPasswordError").innerHTML = "";
+
+            // Validarea adresei de email
+            var email = document.getElementById("email").value;
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById("emailError").innerHTML = "Introduceți o adresă de email validă.";
+                return false;
+            }
+
+            // Validarea parolei
+            var password = document.getElementById("password").value;
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                document.getElementById("passwordError").innerHTML = "Parola trebuie să conțină cel puțin 8 caractere, o literă mică, o literă mare, un număr și un caracter special.";
+                return false;
+            }
+
+            // Validarea confirmarii parolei
+            var confirmPassword = document.getElementById("confirmPassword").value;
+            if (password !== confirmPassword) {
+                document.getElementById("confirmPasswordError").innerHTML = "Parola și confirmarea parolei nu se potrivesc.";
+                return false;
+            }
+
+            // Returneaza true daca toate validarile au trecut
+            return true;
+        }
+    </script>
+
+</body>
+</html>

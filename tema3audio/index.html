@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        #currentLevel {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Memory Game</h1>
+    <p id="message"></p>
+    <button onclick="startGame()">Start Game</button>
+    <p id="currentLevel"></p>
+    <button id="btn1" onclick="userClick(1)" disabled>1</button>
+    <button id="btn2" onclick="userClick(2)" disabled>2</button>
+    <button id="btn3" onclick="userClick(3)" disabled>3</button>
+    <button id="btn4" onclick="userClick(4)" disabled>4</button>
+    <button id="continueBtn" onclick="continueGame()" style="display: none;">Do nothing</button>
+    <button id="endGameBtn" onclick="endGame()" style="display: none;">End Game</button>
+
+    <script>
+        const sounds = ['sound1.mp3', 'sound2.mp3', 'sound3.mp3', 'sound4.mp3'];
+        const audioElements = [];
+
+        let sequence = [];
+        let playerSequence = [];
+        let level = 1;
+        let userTurn = false;
+        let soundsToPlay = 1;
+
+        function startGame() {
+            sequence = [];
+            playerSequence = [];
+            userTurn = false;
+            generateSequence();
+            showMessage('');
+            updateCurrentLevel();
+            playSequence();
+        }
+        function playSequence() {
+            let index = 0;
+            const delayBetweenSounds = 1000;
+            const interval = setInterval(() => {
+                if (index < soundsToPlay) {
+                    playSound(sequence[index]);
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    showMessage('Your turn');
+                    enableButtons();
+                    userTurn = true;
+
+                     
+                    setTimeout(() => {
+                        userTurn = false;
+                        showMessage('');
+                        disableButtons();
+                        showDecisionButtons();
+                    }, 15000);  
+                }
+            }, delayBetweenSounds);
+        }
+
+        function generateSequence() {
+            sequence = [];
+            for (let i = 0; i < soundsToPlay; i++) {
+                const randomIndex = Math.floor(Math.random() * sounds.length);
+                sequence.push(randomIndex + 1);  
+            }
+        }
+
+        function playSound(index) {
+            const audio = new Audio(sounds[index - 1]);
+            audio.play();
+            audioElements.push(audio);
+        }
+
+        function enableButtons() {
+            document.getElementById('btn1').disabled = false;
+            document.getElementById('btn2').disabled = false;
+            document.getElementById('btn3').disabled = false;
+            document.getElementById('btn4').disabled = false;
+        }
+
+        function disableButtons() {
+            document.getElementById('btn1').disabled = true;
+            document.getElementById('btn2').disabled = true;
+            document.getElementById('btn3').disabled = true;
+            document.getElementById('btn4').disabled = true;
+        }
+
+        function showDecisionButtons() {
+            document.getElementById('continueBtn').style.display = 'inline';
+            document.getElementById('endGameBtn').style.display = 'inline';
+        }
+
+        function hideDecisionButtons() {
+            document.getElementById('continueBtn').style.display = 'none';
+            document.getElementById('endGameBtn').style.display = 'none';
+        }
+
+        function showMessage(message) {
+            document.getElementById('message').innerText = message;
+        }
+
+        function updateCurrentLevel() {
+            document.getElementById('currentLevel').innerText = `Current Level: ${level}`;
+        }
+
+        function userClick(btnIndex) {
+            if (!userTurn) {
+                return;  
+            }
+
+            playSound(btnIndex);
+            playerSequence.push(btnIndex);
+
+            if (playerSequence.length === soundsToPlay) {
+                disableButtons();
+                hideDecisionButtons();
+                setTimeout(() => {
+                    checkSequence();
+                }, 500);  
+            }
+        }
+
+        function checkSequence() {
+            for (let i = 0; i < playerSequence.length; i++) {
+                if (playerSequence[i] !== sequence[i]) {
+                    showMessage('Game over. Try again.');
+                    setTimeout(() => {
+                        level = 1;
+                        soundsToPlay = 1;
+                        startGame();
+                    }, 3000);
+                    return;
+                }
+            }
+
+            if (level === 6) {
+                showMessage('Congratulations! You completed all levels.');
+                setTimeout(() => {
+                    level = 1;
+                    soundsToPlay = 1;
+                    startGame();
+                }, 3000);
+            } else {
+                level++;
+                soundsToPlay = level;
+                showMessage(`Level ${level} completed. Continue to the next level or end the game.`);
+                updateCurrentLevel();
+            }
+        }
+
+        function continueGame() {
+            playerSequence = [];
+            hideDecisionButtons();
+            setTimeout(() => {
+                startGame();
+            }, 1000);  
+        }
+
+        function endGame() {
+            showMessage('Game ended. You can start a new game.');
+            level = 1;
+            soundsToPlay = 1;
+            playerSequence = [];
+            hideDecisionButtons();
+            
+             
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;  
+            });
+            audioElements.length = 0; 
+            updateCurrentLevel();
+        }
+    </script>
+</body>
+</html>

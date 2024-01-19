@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triviadog🐶</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        #question {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        #result {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Triviadog🐶</h1>
+    <div id="question"></div>
+    <button onclick="checkAnswer(1)" id="option1"></button>
+    <button onclick="checkAnswer(2)" id="option2"></button>
+    <button onclick="checkAnswer(3)" id="option3"></button>
+    <div id="result"></div>
+    <button onclick="resetGame()">Restart Game</button>
+
+    <script>
+        const questions = [
+            {
+                question: 'Câți ani trăiește în medie un câine?',
+                options: ['10-12 ani', '5-7 ani', '15-20 ani'],
+                correctAnswer: 1
+            },
+            {
+                question: 'Care este cea mai mare rasă de câini?',
+                options: ['Bulldog Englez', 'Cane Corso', 'Mastiff Tibetan'],
+                correctAnswer: 3
+            },
+            {
+                question: 'Care este cea mai mică rasă de câini?',
+                options: ['Chihuahua', 'Pomeranian', 'Shih Tzu'],
+                correctAnswer: 1
+            },
+            {
+                question: 'Câți dinții temporari are un cățel?',
+                options: ['20', '24', '28'],
+                correctAnswer: 2
+            },
+            {
+                question: 'Ce rasă de câini este cunoscută pentru blana sa moale și buclată?',
+                options: ['Golden Retriever', 'Poodle', 'German Shepherd'],
+                correctAnswer: 2
+            },
+            {
+                question: 'Câte grupe principale de rase de câini recunoaște American Kennel Club?',
+                options: ['5', '7', '10'],
+                correctAnswer: 2
+            },
+            {
+                question: 'Care este cea mai veche rasă de câini cunoscută?',
+                options: ['Shiba Inu', 'Saluki', 'Bulldog Englez'],
+                correctAnswer: 2
+            },
+            {
+                question: 'Ce rasă de câini este considerată cea mai rapidă?',
+                options: ['Greyhound', 'Siberian Husky', 'Doberman'],
+                correctAnswer: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let userScore = 0;
+
+        function displayQuestion() {
+            const questionElement = document.getElementById('question');
+            const option1Element = document.getElementById('option1');
+            const option2Element = document.getElementById('option2');
+            const option3Element = document.getElementById('option3');
+            const resultElement = document.getElementById('result');
+
+            questionElement.innerText = questions[currentQuestion].question;
+            option1Element.innerText = questions[currentQuestion].options[0];
+            option2Element.innerText = questions[currentQuestion].options[1];
+            option3Element.innerText = questions[currentQuestion].options[2];
+
+            resultElement.innerText = '';
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestion].correctAnswer;
+            const resultElement = document.getElementById('result');
+
+            if (selectedOption === correctAnswer) {
+                resultElement.innerText = 'Răspuns corect!';
+                userScore++;
+            } else {
+                resultElement.innerText = 'Răspuns greșit. Răspunsul corect era: ' + questions[currentQuestion].options[correctAnswer - 1];
+            }
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                displayQuestion();
+            } else {
+                resultElement.innerText += `\nScorul tău final: ${userScore} / ${questions.length}`;
+                disableButtons();
+            }
+        }
+
+        function disableButtons() {
+            document.getElementById('option1').disabled = true;
+            document.getElementById('option2').disabled = true;
+            document.getElementById('option3').disabled = true;
+        }
+
+        function resetGame() {
+            currentQuestion = 0;
+            userScore = 0;
+            enableButtons();
+            displayQuestion();
+            document.getElementById('result').innerText = '';
+        }
+
+        function enableButtons() {
+            document.getElementById('option1').disabled = false;
+            document.getElementById('option2').disabled = false;
+            document.getElementById('option3').disabled = false;
+        }
+
+        displayQuestion();
+    </script>
+</body>
+</html>
